@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Web3Modal from "web3modal";
 import { useWeb3 } from "@3rdweb/hooks";
 import LandingHeader from "../components/landin_header.js";
 import NFTCards from "../components/NFTCards";
@@ -26,8 +27,14 @@ export default function Explore() {
   }, []);
 
   async function loadNFTs() {
+    const web3Modal = new Web3Modal({
+      network: "mainnet",
+      cacheProvider: true,
+    });
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
     /* create a generic provider and query for unsold market items */
-    const provider = new ethers.providers.JsonRpcProvider();
+    // const provider = new ethers.providers.JsonRpcProvider();
     const contract = new ethers.Contract(
       marketplaceAddress,
       NFTMarketplace.abi,
